@@ -1,19 +1,21 @@
 {
-	"extends": "./packages/tsconfig/base.json",
-	"compilerOptions": {
-		"outDir": "dist",
-		"rootDir": ".",
-		"module": "ESNext",
-		"target": "ES2022",
-		"lib": ["ES2022"],
-		"types": ["node"],
-		"moduleResolution": "bundler",
-		"allowImportingTsExtensions": false,
-		"paths": {
-			"@iqai/adk": ["./packages/adk/src/index.ts"],
-			"@iqai/adk/*": ["./packages/adk/src/*"]
-		}
-	},
-	"include": ["flowcloser.ts", "src/**/*"],
-	"exclude": ["node_modules", "dist"]
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022"],
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "packages"]
 }
+

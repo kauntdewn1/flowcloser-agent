@@ -1,6 +1,0 @@
-{
-	"title": "CLI",
-	"icon": "Terminal",
-	"root": true,
-	"pages": ["index", "commands", "configuration"]
-}
