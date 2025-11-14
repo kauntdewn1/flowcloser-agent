@@ -9,7 +9,8 @@
 		"jsx": "preserve",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"module": "esnext",
-		"moduleResolution": "Bundler",
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": false,
 		"noEmit": true,
 		"resolveJsonModule": true,
 		"target": "es5"

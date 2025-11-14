@@ -1,6 +1,9 @@
 {
 	"name": "adk-ts",
 	"private": true,
+	"dependencies": {
+		"@iqai/adk": "workspace:*"
+	},
 	"scripts": {
 		"build": "turbo build --concurrency 50",
 		"build:docs": "turbo build --filter=docs",

@@ -20,6 +20,10 @@ export function createExternalizePlugin(
 				) {
 					return;
 				}
+				// Don't externalize @adk/* - these should be resolved by path plugin and bundled
+				if (args.path.startsWith("@adk/")) {
+					return;
+				}
 				if (
 					ALWAYS_EXTERNAL_SCOPES.some((s) => args.path.startsWith(s)) ||
 					explicitExternals.has(args.path)

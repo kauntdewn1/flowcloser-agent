@@ -1,4 +1,4 @@
-import { Logger } from "@adk/logger/index.js";
+import { Logger } from "@adk/logger";
 import type { LlmRequest } from "@adk/models";
 import type { Content, Part } from "@google/genai";
 import { generateId, type LanguageModel } from "ai";
