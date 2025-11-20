@@ -5,4 +5,5 @@ dist/
 *.log
 data/
 .adk-cache
+.DS_Store
 
