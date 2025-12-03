@@ -16,28 +16,33 @@
 ### ❌ O que falta para WhatsApp Bot v2.0:
 
 #### 1. **Integração WhatsApp Business API**
+
 - ❌ Cliente WhatsApp API (WhatsAppClient class)
 - ❌ Webhook para WhatsApp (`/webhook` GET/POST)
 - ❌ Suporte a templates do WhatsApp
 - ❌ Marcação de mensagens como lidas
 
 #### 2. **Fluxo Conversacional Estruturado**
+
 - ❌ Sistema de steps (start → name → company → project_type → budget → urgency → contact_preference → process)
 - ❌ Validação de respostas por step
 - ❌ Gerenciamento de sessão manual (atualmente usa ADK session service)
 
 #### 3. **Sistema de Follow-Up**
+
 - ❌ Fila de follow-ups
 - ❌ Cron jobs para follow-ups automáticos
 - ❌ Mensagens de follow-up personalizadas
 
 #### 4. **Integrações Web3/Descentralizadas**
+
 - ❌ MCP Router (Kwil, Ceramic, IPFS)
 - ❌ Geração de propostas no IPFS
 - ❌ Salvamento de leads no Kwil DB
 - ❌ Logs no Ceramic Network
 
 #### 5. **Páginas Legais (Obrigatório para Meta)**
+
 - ❌ Privacy Policy (`/privacy-policy`)
 - ❌ Terms of Service (`/terms-of-service`)
 

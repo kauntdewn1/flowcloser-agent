@@ -1,6 +1,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
 import { agent, askWithFallback } from "./agents/flowcloser/agent.js";
+import { privacyPolicy, termsOfService } from "./routes/legal.js";
 
 dotenv.config();
 
@@ -13,6 +14,13 @@ app.use(express.json());
 app.get("/health", (req, res) => {
 	res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
+
+// ═══════════════════════════════════════════════════════════════════════
+// PÁGINAS LEGAIS (Obrigatório para aprovação no Meta Developer)
+// ═══════════════════════════════════════════════════════════════════════
+
+app.get("/privacy-policy", privacyPolicy);
+app.get("/terms-of-service", termsOfService);
 
 app.get("/api/agents", async (req, res) => {
 	try {
@@ -160,4 +168,6 @@ app.listen(PORT, "0.0.0.0", () => {
 	console.log(`📍 Agents: http://0.0.0.0:${PORT}/api/agents`);
 	console.log(`📍 Instagram Webhook: http://0.0.0.0:${PORT}/api/webhooks/instagram`);
 	console.log(`📍 Instagram OAuth Callback: http://0.0.0.0:${PORT}/api/auth/instagram/callback`);
+	console.log(`📍 Privacy Policy: http://0.0.0.0:${PORT}/privacy-policy`);
+	console.log(`📍 Terms of Service: http://0.0.0.0:${PORT}/terms-of-service`);
 });

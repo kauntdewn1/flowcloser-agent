@@ -1,0 +1,166 @@
+# ⚙️ Configuração no Meta Developer Console
+
+## ✅ O que já está pronto
+
+- ✅ Webhook Instagram configurado (`/api/webhooks/instagram`)
+- ✅ OAuth Callback configurado (`/api/auth/instagram/callback`)
+- ✅ Privacy Policy criada (`/privacy-policy`)
+- ✅ Terms of Service criados (`/terms-of-service`)
+- ✅ Deploy no Railway funcionando
+
+---
+
+## 📋 Passo a Passo para Configurar no Meta Developer
+
+### 1. Acessar o Meta Developer Console
+
+1. Acesse: https://developers.facebook.com/apps/
+2. Selecione seu App (ID: `2706639773011042`)
+
+### 2. Configurar Webhook do Instagram
+
+1. Vá em **Produtos** → **Instagram** → **Configurações**
+2. Role até **Webhooks**
+3. Clique em **Configurar Webhooks** ou **Editar**
+4. Preencha:
+   - **URL do Callback**: `https://flowcloser-agent-production.up.railway.app/api/webhooks/instagram`
+   - **Token de Verificação**: `flowcloser_webhook_neo`
+   - **Campos de Assinatura**: Marque `messages`
+5. Clique em **Verificar e Salvar**
+6. Meta vai fazer uma requisição GET para verificar - deve retornar sucesso ✅
+
+### 3. Configurar OAuth Redirect URI
+
+1. Ainda em **Instagram** → **Configurações**
+2. Role até **OAuth Redirect URIs**
+3. Adicione:
+   ```
+   https://flowcloser-agent-production.up.railway.app/api/auth/instagram/callback
+   ```
+4. Clique em **Salvar Alterações**
+
+### 4. Adicionar Páginas Legais (OBRIGATÓRIO)
+
+1. Vá em **App Review** → **Permissions and Features**
+2. Ou vá em **Configurações** → **Básico**
+3. Role até **Páginas Legais**
+4. Preencha:
+   - **URL da Política de Privacidade**: 
+     ```
+     https://flowcloser-agent-production.up.railway.app/privacy-policy
+     ```
+   - **URL dos Termos de Serviço**: 
+     ```
+     https://flowcloser-agent-production.up.railway.app/terms-of-service
+     ```
+5. Clique em **Salvar Alterações**
+
+### 5. Configurar Permissões do Instagram
+
+1. Vá em **Produtos** → **Instagram** → **Permissões**
+2. Solicite as permissões necessárias:
+   - `instagram_basic` (já deve estar ativa)
+   - `instagram_manage_messages` (para enviar mensagens)
+   - `pages_show_list` (para listar páginas)
+   - `pages_messaging` (para mensagens)
+
+### 6. Testar o Webhook
+
+1. No Meta Developer Console, vá em **Webhooks**
+2. Clique em **Testar** ao lado do webhook do Instagram
+3. Meta vai enviar um evento de teste
+4. Verifique os logs do Railway para confirmar que recebeu
+
+### 7. Submeter para Revisão (se necessário)
+
+Se você precisa de permissões adicionais:
+
+1. Vá em **App Review** → **Permissions and Features**
+2. Selecione as permissões que precisa
+3. Preencha o formulário de revisão:
+   - **Como você usa essa permissão?**: Descreva o uso do bot
+   - **Instruções para o revisor**: Como testar o bot
+   - **Screenshots/Vídeos**: Mostre o fluxo funcionando
+4. Clique em **Enviar para Revisão**
+
+---
+
+## 🔗 URLs Importantes
+
+### Produção (Railway)
+- **Base URL**: `https://flowcloser-agent-production.up.railway.app`
+- **Health Check**: `https://flowcloser-agent-production.up.railway.app/health`
+- **Webhook Instagram**: `https://flowcloser-agent-production.up.railway.app/api/webhooks/instagram`
+- **OAuth Callback**: `https://flowcloser-agent-production.up.railway.app/api/auth/instagram/callback`
+- **Privacy Policy**: `https://flowcloser-agent-production.up.railway.app/privacy-policy`
+- **Terms of Service**: `https://flowcloser-agent-production.up.railway.app/terms-of-service`
+
+### Variáveis de Ambiente Necessárias
+
+Certifique-se de que estas variáveis estão configuradas no Railway:
+
+```env
+INSTAGRAM_APP_ID=2706639773011042
+INSTAGRAM_APP_SECRET=sua_chave_secreta
+INSTAGRAM_REDIRECT_URI=https://flowcloser-agent-production.up.railway.app/api/auth/instagram/callback
+WEBHOOK_VERIFY_TOKEN=flowcloser_webhook_neo
+```
+
+---
+
+## ✅ Checklist Final
+
+Antes de submeter para revisão, verifique:
+
+- [ ] Webhook configurado e verificando com sucesso
+- [ ] OAuth Redirect URI adicionado
+- [ ] Privacy Policy URL configurada e acessível
+- [ ] Terms of Service URL configurada e acessível
+- [ ] Variáveis de ambiente configuradas no Railway
+- [ ] Servidor rodando e acessível publicamente
+- [ ] Health check respondendo (`/health`)
+- [ ] Webhook recebendo eventos de teste
+
+---
+
+## 🧪 Testar Localmente (Opcional)
+
+Se quiser testar localmente antes de fazer deploy:
+
+1. Use ngrok ou similar para expor localhost:
+   ```bash
+   ngrok http 8042
+   ```
+
+2. Use a URL do ngrok no Meta Developer Console temporariamente
+
+3. Após testes, atualize para a URL do Railway
+
+---
+
+## 🚨 Troubleshooting
+
+### Webhook não verifica
+- Verifique se o `WEBHOOK_VERIFY_TOKEN` está correto
+- Verifique se o endpoint retorna o `challenge` como texto (não JSON)
+- Verifique os logs do Railway
+
+### Privacy Policy não aparece
+- Verifique se a URL está acessível publicamente
+- Verifique se não há redirecionamentos
+- Teste a URL no navegador
+
+### OAuth não funciona
+- Verifique se o `INSTAGRAM_REDIRECT_URI` está exatamente igual no console
+- Verifique se o `INSTAGRAM_APP_SECRET` está correto
+- Verifique os logs do servidor
+
+---
+
+## 📞 Suporte
+
+Se tiver problemas:
+1. Verifique os logs do Railway: `railway logs`
+2. Teste os endpoints manualmente com `curl`
+3. Verifique a documentação do Meta: https://developers.facebook.com/docs/instagram-api/
+

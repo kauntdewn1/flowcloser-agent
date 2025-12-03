@@ -5,11 +5,13 @@ Guia completo para testar todos os endpoints e funcionalidades do FlowCloser Age
 ## 🚀 Iniciando o Servidor
 
 ### Modo Desenvolvimento (com hot-reload)
+
 ```bash
 npm run dev
 ```
 
 ### Modo Produção (após build)
+
 ```bash
 npm run build
 npm start
@@ -28,6 +30,7 @@ curl http://localhost:8042/health
 ```
 
 **Resposta esperada:**
+
 ```json
 {
   "status": "ok",
@@ -44,6 +47,7 @@ curl http://localhost:8042/api/agents
 ```
 
 **Resposta esperada:**
+
 ```json
 {
   "agents": ["flowcloser"],
@@ -65,6 +69,7 @@ curl -X POST http://localhost:8042/api/agents/flowcloser/message \
 ```
 
 **Resposta esperada:**
+
 ```json
 {
   "response": "Resposta do agente...",
@@ -73,6 +78,7 @@ curl -X POST http://localhost:8042/api/agents/flowcloser/message \
 ```
 
 **Exemplo completo:**
+
 ```bash
 # Teste com mensagem simples
 curl -X POST http://localhost:8042/api/agents/flowcloser/message \
@@ -316,18 +322,22 @@ curl -X POST https://flowcloser-agent-production.up.railway.app/api/agents/flowc
 ## 🐛 Troubleshooting
 
 ### Erro: "Missing authorization code"
+
 - Verifique se o `INSTAGRAM_REDIRECT_URI` está correto no `.env`
 - Certifique-se de que a URL está registrada no Facebook Developer Console
 
 ### Erro: "Webhook verification failed"
+
 - Verifique se o `WEBHOOK_VERIFY_TOKEN` corresponde ao configurado no Facebook
 - Certifique-se de que o endpoint está acessível publicamente (HTTPS em produção)
 
 ### Erro: "Failed to process message"
+
 - Verifique se as variáveis de ambiente estão configuradas (`IQAI_API_KEY`, `OPENAI_API_KEY`)
 - Verifique os logs do servidor para mais detalhes
 
 ### Erro: "EADDRINUSE: address already in use"
+
 - A porta 8042 está em uso
 - Encontre o processo: `lsof -i :8042`
 - Encerre o processo: `kill <PID>`
