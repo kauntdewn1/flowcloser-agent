@@ -6,7 +6,12 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
-    "dev": "tsx watch src/main.ts"
+    "dev": "tsx watch src/main.ts",
+    "chat": "tsx chat.ts",
+    "test:openai": "tsx test-openai-key.ts",
+    "test:iqai": "tsx test-iqai-connection.ts",
+    "test:iqai:simple": "tsx test-iqai-simple.ts",
+    "test:iqai:gemini": "tsx test-iqai-gemini.ts"
   },
   "dependencies": {
     "@iqai/adk": "^0.5.6",

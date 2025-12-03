@@ -96,3 +96,34 @@ export const checkNeoflowTokenTool: BaseTool = createTool({
 		};
 	},
 });
+
+const sendPortfolioVisualSchema = z.object({
+	leadStage: z.enum(["qualified", "interested", "proposal"]).describe("Stage of the lead in the funnel"),
+	urgency: z.boolean().optional().describe("Whether to add urgency to the message"),
+});
+
+export const sendPortfolioVisualTool: BaseTool = createTool({
+	name: "send_portfolio_visual",
+	description: "Send the visual portfolio link when lead shows interest in digital presence. Use this to increase perceived value and authority. ALWAYS use this tool when presenting proposals or when lead asks about examples/portfolio.",
+	schema: sendPortfolioVisualSchema as z.ZodSchema<z.infer<typeof sendPortfolioVisualSchema>>,
+	fn: async (params) => {
+		const portfolioUrl = process.env.PORTFOLIO_URL || "https://www.canva.com/design/DAG4sWWGiv8/1nwHM_YaS4YSzlXP-OlS9Q/view";
+		
+		const urgencyMessage = params.urgency 
+			? "Essas zonas visuais e estrutura de entrega não são repetidas para qualquer um. Só produção de elite."
+			: "";
+		
+		return {
+			success: true,
+			portfolioUrl,
+			message: `Portfolio visual disponível: ${portfolioUrl}`,
+			suggestedCopy: {
+				intro: "Dá uma olhada nesse flow visual que montei — ele mostra como seu site/webapp pode ficar, com valor e profissionalismo.",
+				portfolio: portfolioUrl,
+				urgency: urgencyMessage,
+				cta: "Quer que monte a cópia + entrega no fluxo completo? Me dá OK e te mando a proposta personalizada no WhatsApp.",
+			},
+			stage: params.leadStage,
+		};
+	},
+});

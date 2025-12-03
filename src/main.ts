@@ -3,7 +3,8 @@ import * as dotenv from "dotenv";
 import { agent, askWithFallback } from "./agents/flowcloser/agent.js";
 import { privacyPolicy, termsOfService } from "./routes/legal.js";
 
-dotenv.config();
+// Forçar uso do .env mesmo se houver variáveis de ambiente do sistema
+dotenv.config({ override: true });
 
 const app = express();
 const PORT = Number(process.env.PORT) || 8042;
@@ -60,7 +61,15 @@ app.post("/api/webhooks/instagram", async (req, res) => {
 						console.log(`📨 Message from ${senderId}: ${messageText}`);
 
 						try {
-							const responseText = await askWithFallback(messageText);
+							// Usar novo formato com contexto dinâmico
+							const responseText = await askWithFallback(messageText, {
+								channel: "instagram",
+								userId: senderId,
+								context: {
+									source: "instagram",
+									timestamp: new Date().toISOString(),
+								},
+							});
 							console.log(`✅ Response: ${responseText}`);
 						} catch (error) {
 							console.error("Error processing message:", error);
@@ -141,13 +150,18 @@ app.get("/api/auth/instagram/callback", async (req, res) => {
 
 app.post("/api/agents/flowcloser/message", async (req, res) => {
 	try {
-		const { message, sessionId } = req.body;
+		const { message, sessionId, channel, userId, context } = req.body;
 
 		if (!message) {
 			return res.status(400).json({ error: "Message is required" });
 		}
 
-		const response = await askWithFallback(message);
+		// Suporte a contexto personalizado via API
+		const response = await askWithFallback(message, {
+			channel: channel || "api",
+			userId: userId || sessionId || "default",
+			context: context || {},
+		});
 
 		res.json({
 			response: response,
@@ -162,11 +176,107 @@ app.post("/api/agents/flowcloser/message", async (req, res) => {
 	}
 });
 
+// ═══════════════════════════════════════════════════════════════════════
+// WEBHOOK WHATSAPP (Fallback e integração futura)
+// ═══════════════════════════════════════════════════════════════════════
+
+app.post("/api/webhooks/whatsapp", async (req, res) => {
+	try {
+		const body = req.body;
+
+		// Verificar formato do webhook WhatsApp
+		if (body.entry) {
+			body.entry.forEach((entry: any) => {
+				entry.changes?.forEach((change: any) => {
+					if (change.value?.messages) {
+						change.value.messages.forEach(async (message: any) => {
+							if (message.text?.body) {
+								const senderId = message.from;
+								const messageText = message.text.body;
+
+								console.log(`📨 WhatsApp message from ${senderId}: ${messageText}`);
+
+								try {
+									const responseText = await askWithFallback(messageText, {
+										channel: "whatsapp",
+										userId: senderId,
+										context: {
+											source: "whatsapp",
+											timestamp: new Date().toISOString(),
+										},
+									});
+
+									console.log(`✅ WhatsApp Response: ${responseText}`);
+									
+									// Aqui você integraria com a API do WhatsApp para enviar a resposta
+									// Por enquanto, apenas logamos
+								} catch (error) {
+									console.error("Error processing WhatsApp message:", error);
+								}
+							}
+						});
+					}
+				});
+			});
+		}
+
+		res.status(200).send("EVENT_RECEIVED");
+	} catch (error) {
+		console.error("WhatsApp webhook error:", error);
+		res.sendStatus(500);
+	}
+});
+
+app.get("/api/webhooks/whatsapp", (req, res) => {
+	// Verificação do webhook WhatsApp (similar ao Instagram)
+	const mode = req.query["hub.mode"];
+	const token = req.query["hub.verify_token"];
+	const challenge = req.query["hub.challenge"];
+
+	if (mode === "subscribe" && token === WEBHOOK_VERIFY_TOKEN) {
+		console.log("✅ WhatsApp webhook verified");
+		res.status(200).send(challenge);
+	} else {
+		res.sendStatus(403);
+	}
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// GHOSTWRITER MODE - Gera pitches prontos para humanos
+// ═══════════════════════════════════════════════════════════════════════
+
+app.post("/api/agents/flowcloser/ghostwriter", async (req, res) => {
+	try {
+		const { generateGhostwriterPitch } = await import("./agents/flowcloser/ghostwriter.js");
+		const { leadContext, options } = req.body;
+
+		if (!leadContext) {
+			return res.status(400).json({ error: "leadContext is required" });
+		}
+
+		const pitch = generateGhostwriterPitch(leadContext, options || {});
+
+		res.json({
+			pitch,
+			channel: options?.channel || "api",
+			timestamp: new Date().toISOString(),
+		});
+	} catch (error) {
+		console.error("Error generating ghostwriter pitch:", error);
+		res.status(500).json({
+			error: "Failed to generate pitch",
+			details: error instanceof Error ? error.message : String(error),
+		});
+	}
+});
+
 app.listen(PORT, "0.0.0.0", () => {
 	console.log(`🚀 FlowCloser API running on port ${PORT}`);
 	console.log(`📍 Health check: http://0.0.0.0:${PORT}/health`);
 	console.log(`📍 Agents: http://0.0.0.0:${PORT}/api/agents`);
 	console.log(`📍 Instagram Webhook: http://0.0.0.0:${PORT}/api/webhooks/instagram`);
+	console.log(`📍 WhatsApp Webhook: http://0.0.0.0:${PORT}/api/webhooks/whatsapp`);
+	console.log(`📍 Ghostwriter: http://0.0.0.0:${PORT}/api/agents/flowcloser/ghostwriter`);
 	console.log(`📍 Instagram OAuth Callback: http://0.0.0.0:${PORT}/api/auth/instagram/callback`);
 	console.log(`📍 Privacy Policy: http://0.0.0.0:${PORT}/privacy-policy`);
 	console.log(`📍 Terms of Service: http://0.0.0.0:${PORT}/terms-of-service`);

@@ -47,12 +47,14 @@
 - ❌ Terms of Service (`/terms-of-service`)
 
 #### 6. **Dependências Faltantes**
+
 - ❌ `axios` (para chamadas HTTP)
 - ❌ `node-cron` (para agendamento de tarefas)
 - ❌ `pino` (logger estruturado)
 - ❌ `crypto` (já vem com Node.js, mas precisa ser usado)
 
 #### 7. **Variáveis de Ambiente Faltantes**
+
 - ❌ `WHATSAPP_ACCESS_TOKEN`
 - ❌ `WHATSAPP_PHONE_NUMBER_ID`
 - ❌ `WHATSAPP_BUSINESS_ACCOUNT_ID`

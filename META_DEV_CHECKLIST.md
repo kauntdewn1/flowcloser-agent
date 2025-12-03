@@ -5,12 +5,14 @@
 ### 1. ⚠️ CRÍTICO: Páginas Legais (Obrigatório)
 
 **Meta exige URLs públicas para:**
+
 - Privacy Policy
 - Terms of Service
 
 **Status atual:** ❌ NÃO TEMOS
 
 **Ação necessária:**
+
 - Criar endpoints `/privacy-policy` e `/terms-of-service`
 - Deploy no Railway
 - Adicionar URLs no Meta Developer Console
@@ -22,10 +24,12 @@
 **Status atual:** ❌ TEMOS APENAS INSTAGRAM
 
 **O que você está tentando aprovar:**
+
 - Se for **WhatsApp**: precisa criar webhook `/webhook` (não `/api/webhooks/instagram`)
 - Se for **Instagram**: já temos, mas precisa verificar se está correto
 
 **Ação necessária:**
+
 - Decidir: WhatsApp ou Instagram?
 - Se WhatsApp: criar endpoints conforme código passado
 - Se Instagram: verificar se está tudo configurado
@@ -52,6 +56,7 @@ src/routes/legal.ts  # Privacy Policy e Terms
 ```
 
 **URLs que você vai precisar:**
+
 - `https://flowcloser-agent-production.up.railway.app/privacy-policy`
 - `https://flowcloser-agent-production.up.railway.app/terms-of-service`
 
@@ -67,10 +72,12 @@ src/routes/legal.ts  # Privacy Policy e Terms
 ### Passo 3: Configurar Webhook
 
 **Se for WhatsApp:**
+
 - Webhook URL: `https://flowcloser-agent-production.up.railway.app/webhook`
 - Verify Token: `flowcloser_webhook_neo` (ou o que você configurar)
 
 **Se for Instagram:**
+
 - Webhook URL: `https://flowcloser-agent-production.up.railway.app/api/webhooks/instagram`
 - Verify Token: `flowcloser_webhook_neo`
 
@@ -95,12 +102,15 @@ GET /webhook?hub.mode=subscribe&hub.verify_token=SEU_TOKEN&hub.challenge=CHALLEN
 ## 🚨 Problemas Comuns
 
 ### Problema 1: "Privacy Policy URL is required"
+
 **Solução:** Criar endpoint `/privacy-policy` e adicionar URL no console.
 
 ### Problema 2: "Webhook verification failed"
+
 **Solução:** Verificar se o token está correto e se o endpoint retorna o challenge.
 
 ### Problema 3: "App not responding"
+
 **Solução:** Verificar se o servidor está rodando e acessível publicamente.
 
 ---
@@ -108,11 +118,13 @@ GET /webhook?hub.mode=subscribe&hub.verify_token=SEU_TOKEN&hub.challenge=CHALLEN
 ## 📝 Próxima Ação Recomendada
 
 **AGORA:**
+
 1. Criar endpoints de Privacy Policy e Terms of Service
 2. Fazer deploy
 3. Adicionar URLs no Meta Developer Console
 
 **DEPOIS:**
+
 1. Implementar WhatsApp (se necessário)
 2. Implementar fluxo conversacional
 3. Implementar follow-ups
@@ -122,11 +134,13 @@ GET /webhook?hub.mode=subscribe&hub.verify_token=SEU_TOKEN&hub.challenge=CHALLEN
 ## ❓ Decisão Necessária
 
 **Você está tentando aprovar:**
+
 - [ ] WhatsApp Business API
 - [ ] Instagram Business API
 - [ ] Ambos
 
 **Isso determina:**
+
 - Qual webhook criar/modificar
 - Quais permissões solicitar
 - Qual fluxo implementar
